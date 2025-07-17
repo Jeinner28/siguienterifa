@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Raffle Ticket Sale</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+  }
+  h1 {
+    text-align: center;
+  }
+  .ticket-selection {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .tickets-input {
+    margin: 10px 0;
+    font-size: 1.2em;
+  }
+  .quick-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .quick-buttons button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+  }
+  .selection-summary {
+    background-color: #fff;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+  }
+  #buyTicketsBtn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 1.2em;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  #buyTicketsBtn:hover {
+    background-color: #0056b3;
+  }
+
+  /* Hidden sections */
+  #purchaseForm, #paymentSection, #confirmationPopup {
+    display: none;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  h2 {
+    margin-top: 0;
+  }
+  input[type="text"], input[type="email"], input[type="tel"], select {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0 16px 0;
+    box-sizing: border-box;
+  }
+  label {
+    font-weight: bold;
+  }
+  .payment-methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .payment-method {
+    flex: 1 1 45%;
+    background-color: #e2e2e2;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .payment-method:hover {
+    background-color: #d0d0d0;
+  }
+  #paymentDetails {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 6px;
+  }
+  #uploadProof {
+    margin-top: 20px;
+  }
+  #submitOrder {
+    display: block;
+    margin-top: 20px;
+    padding: 12px;
+    width: 100%;
+    font-size: 1.2em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  #submitOrder:hover {
+    background-color: #218838;
+  }
+  /* Confirmation popup styles */
+  #confirmationPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  #popupMessage {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    text-align: center;
+  }
+  button.closePopup {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color:#007bff;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  button.closePopup:hover {
+    background-color:#0056b3;
+  }
+</style>
+</head>
+<body>
+
+<h1>Raffle Ticket Sale</h1>
+
+<div class="ticket-selection">
+  <h2>Select Number of Tickets</h2>
+  <div class="tickets-input">
+    <label for="ticketCount">Number of tickets:</label>
+    <input type="number" id="ticketCount" min="1" max="10000" value="1" />
+  </div>
+  <div class="quick-buttons">
+    <button data-value="5">5 Tickets</button>
+    <button data-value="10">10 Tickets</button>
+    <button data-value="20">20 Tickets</button>
+    <button data-value="50">50 Tickets</button>
+  </div>
+  <div class="selection-summary" id="selectionSummary">
+    <h3>Your Selection</h3>
+    <p id="ticketsSelected">Tickets: 1</p>
+    <p id="usdPrice">USD: $0.90</p>
+    <p id="vesPrice">VES: Bs. 100</p>
+  </div>
+  <button id="buyTicketsBtn">COMPRAR TICKETS</button>
+</div>
+
+<!-- Purchase Form -->
+<div id="purchaseForm">
+  <h2>Enter Your Details</h2>
+  <form id="orderForm">
+    <label for="fullName">Full Name:</label>
+    <input type="text" id="fullName" required />
+
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" required />
+
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" required />
+
+    <input type="hidden" id="totalTickets" />
+    <input type="hidden" id="totalUSD" />
+    <input type="hidden" id="totalVES" />
+
+    <h3>Select Payment Method</h3>
+    <div class="payment-methods">
+      <div class="payment-method" data-method="Pago Movil">Pago Movil</div>
+      <div class="payment-method" data-method="Zelle">Zelle</div>
+      <div class="payment-method" data-method="Binance">Binance</div>
+      <div class="payment-method" data-method="Paypal">Paypal</div>
+    </div>
+
+    <div id="paymentDetails" style="display:none;">
+      <h4>Bank Details for <span id="selectedMethod"></span></h4>
+      <div id="bankDetailsContent">
+        <!-- Bank details will be inserted here -->
+      </div>
+    </div>
+
+    <div id="uploadProof">
+      <label for="proofFile">Upload Payment Proof:</label>
+      <input type="file" id="proofFile" accept=".jpg,.png,.pdf" required />
+    </div>
+
+    <button type="button" id="submitOrder">ENVIAR COMPROBANTE</button>
+  </form>
+</div>
+
+<!-- Confirmation Popup -->
+<div id="confirmationPopup">
+  <div id="popupMessage">
+    <h2>Gracias!</h2>
+    <p>Su pago ha sido enviado exitosamente.</p>
+    <button class="closePopup">Cerrar</button>
+  </div>
+</div>
+
+<script>
+  // JavaScript code to handle logic
+  const ticketInput = document.getElementById('ticketCount');
+  const ticketsDisplay = document.getElementById('ticketsSelected');
+  const usdDisplay = document.getElementById('usdPrice');
+  const vesDisplay = document.getElementById('vesPrice');
+
+  const quickButtons = document.querySelectorAll('.quick-buttons button');
+
+  const selectionSummary = document.getElementById('selectionSummary');
+
+  const buyTicketsBtn = document.getElementById('buyTicketsBtn');
+
+  const purchaseFormDiv = document.getElementById('purchaseForm');
+
+  const totalTicketsInput = document.getElementById('totalTickets');
+  const totalUSDInput = document.getElementById('totalUSD');
+  const totalVESInput = document.getElementById('totalVES');
+
+  const orderForm = document.getElementById('orderForm');
+
+  const paymentMethodsDiv = document.querySelector('.payment-methods');
+  const paymentDetailsDiv = document.getElementById('paymentDetails');
+  const selectedMethodSpan = document.getElementById('selectedMethod');
+  const bankDetailsContent = document.getElementById('bankDetailsContent');
+
+  const proofFileInput = document.getElementById('proofFile');
+
+  const confirmationPopup = document.getElementById('confirmationPopup');
+
+  let selectedPaymentMethod = '';
+
+  // Function to update selection
+  function updateSelection(count) {
+    if (count < 1) count = 1;
+    if (count > 10000) count = 10000;
+    ticketInput.value = count;
+    updateDisplay();
+  }
+
+  // Function to update display
+  function updateDisplay() {
+    const count = parseInt(ticketInput.value);
+    ticketsDisplay.textContent = `Tickets: ${count}`;
+    const usdPrice = (count * 0.9).toFixed(2);
+    const vesPrice = count * 100;
+    usdDisplay.textContent = `USD: $${usdPrice}`;
+    vesDisplay.textContent = `VES: Bs. ${vesPrice}`;
+  }
+
+  // Quick buttons event
+  quickButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      updateSelection(parseInt(btn.dataset.value));
+    });
+  });
+
+  // Manual input change
+  ticketInput.addEventListener('input', () => {
+    updateDisplay();
+  });
+
+  // Buy tickets button
+  buyTicketsBtn.addEventListener('click', () => {
+    // Populate hidden inputs for later use
+    const count = parseInt(ticketInput.value);
+    totalTicketsInput.value = count;
+    totalUSDInput.value = (count * 0.9).toFixed(2);
+    totalVESInput.value = count * 100;
+
+    // Show purchase form
+    purchaseFormDiv.style.display = 'block';
+
+    // Scroll to form
+    purchaseFormDiv.scrollIntoView({behavior: "smooth"});
+  });
+
+  // Payment method selection
+  paymentMethodsDiv.querySelectorAll('.payment-method').forEach(div => {
+    div.addEventListener('click', () => {
+      selectedPaymentMethod = div.dataset.method;
+      // Highlight selected
+      paymentMethodsDiv.querySelectorAll('.payment-method').forEach(d => d.style.border = 'none');
+      div.style.border = '2px solid #007bff';
+
+      // Show payment details
+      document.getElementById('selectedMethod').textContent = selectedPaymentMethod;
+      paymentDetailsDiv.style.display = 'block';
+
+      // Insert bank details based on method
+      switch(selectedPaymentMethod) {
+        case 'Pago Movil':
+          bankDetailsContent.innerHTML = `
+            <p>Number: 0414-1234567</p>
+            <p>Name: Juan Perez</p>
+            <p>Bank: Banco Venezuela</p>
+          `;
+          break;
+        case 'Zelle':
+          bankDetailsContent.innerHTML = `
+            <p>Email: juanperez@gmail.com</p>
+          `;
+          break;
+        case 'Binance':
+          bankDetailsContent.innerHTML = `
+            <p>Wallet Address: bnb1exampleaddressxyz</p>
+          `;
+          break;
+        case 'Paypal':
+          bankDetailsContent.innerHTML = `
+            <p>PayPal Email: juanperez@gmail.com</p>
+          `;
+          break;
+        default:
+          bankDetailsContent.innerHTML = '';
+      }
+    });
+  });
+
+  // Handle order submission
+  document.getElementById('submitOrder').addEventListener('click', () => {
+    // Validate form
+    if (!selectedPaymentMethod) {
+      alert('Please select a payment method.');
+      return;
+    }
+    const proofFile = proofFileInput.files[0];
+    if (!proofFile) {
+      alert('Please upload proof of payment.');
+      return;
+    }
+
+    // Collect form data
+    const formData = new FormData();
+    formData.append('fullName', document.getElementById('fullName').value);
+    formData.append('phone', document.getElementById('phone').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('tickets', totalTicketsInput.value);
+    formData.append('usd', totalUSDInput.value);
+    formData.append('ves', totalVESInput.value);
+    formData.append('paymentMethod', selectedPaymentMethod);
+    formData.append('proof', proofFile);
+
+    // For demonstration, we'll simulate sending email
+    // In production, you'd send this data to your backend endpoint
+    alert('Processing your order...');
+
+    // Simulate delay and then show success message
+    setTimeout(() => {
+      // Show popup message
+      document.getElementById('confirmationPopup').style.display = 'flex';
+    }, 1000);
+  });
+
+  // Close popup
+  document.querySelector('.closePopup').addEventListener('click', () => {
+    document.getElementById('confirmationPopup').style.display = 'none';
+    // Reset form
+    document.getElementById('orderForm').reset();
+    paymentDetailsDiv.style.display = 'none';
+    // Remove payment method highlight
+    paymentMethodsDiv.querySelectorAll('.payment-method').forEach(d => d.style.border = 'none');
+    selectedPaymentMethod = '';
+    // Hide purchase form
+    purchaseFormDiv.style.display = 'none';
+  });
+
+  // Initialize display
+  updateDisplay();
+
+</script>
+</body>
+</html>
