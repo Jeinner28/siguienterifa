@@ -150,22 +150,22 @@
 </head>
 <body>
 
-<h1>Raffle Ticket Sale</h1>
+<h1>RIFA OSCAR CHAPARRO</h1>
 
 <div class="ticket-selection">
-  <h2>Select Number of Tickets</h2>
+  <h2>Selecciona tus tickets</h2>
   <div class="tickets-input">
-    <label for="ticketCount">Number of tickets:</label>
+    <label for="ticketCount">Cantidad</label>
     <input type="number" id="ticketCount" min="1" max="10000" value="1" />
   </div>
   <div class="quick-buttons">
-    <button data-value="5">5 Tickets</button>
-    <button data-value="10">10 Tickets</button>
-    <button data-value="20">20 Tickets</button>
-    <button data-value="50">50 Tickets</button>
+    <button data-value="5">2</button>
+    <button data-value="10">5</button>
+    <button data-value="20">10</button>
+    <button data-value="50">20</button>
   </div>
   <div class="selection-summary" id="selectionSummary">
-    <h3>Your Selection</h3>
+    <h3>Tu elección</h3>
     <p id="ticketsSelected">Tickets: 1</p>
     <p id="usdPrice">USD: $0.90</p>
     <p id="vesPrice">VES: Bs. 100</p>
@@ -175,22 +175,22 @@
 
 <!-- Purchase Form -->
 <div id="purchaseForm">
-  <h2>Enter Your Details</h2>
+  <h2>Completa los datos</h2>
   <form id="orderForm">
-    <label for="fullName">Full Name:</label>
+    <label for="fullName">Nombre y Apellido:</label>
     <input type="text" id="fullName" required />
 
-    <label for="phone">Phone Number:</label>
+    <label for="phone">WhatsApp:</label>
     <input type="tel" id="phone" required />
 
-    <label for="email">Email Address:</label>
+    <label for="email">Correo electrónico:</label>
     <input type="email" id="email" required />
 
     <input type="hidden" id="totalTickets" />
     <input type="hidden" id="totalUSD" />
     <input type="hidden" id="totalVES" />
 
-    <h3>Select Payment Method</h3>
+    <h3>Métodos de pago</h3>
     <div class="payment-methods">
       <div class="payment-method" data-method="Pago Movil">Pago Movil</div>
       <div class="payment-method" data-method="Zelle">Zelle</div>
@@ -199,14 +199,14 @@
     </div>
 
     <div id="paymentDetails" style="display:none;">
-      <h4>Bank Details for <span id="selectedMethod"></span></h4>
+      <h4>Datos bancarios <span id="selectedMethod"></span></h4>
       <div id="bankDetailsContent">
         <!-- Bank details will be inserted here -->
       </div>
     </div>
 
     <div id="uploadProof">
-      <label for="proofFile">Upload Payment Proof:</label>
+      <label for="proofFile">Sube tu comprobante de pago:</label>
       <input type="file" id="proofFile" accept=".jpg,.png,.pdf" required />
     </div>
 
@@ -218,7 +218,7 @@
 <div id="confirmationPopup">
   <div id="popupMessage">
     <h2>Gracias!</h2>
-    <p>Su pago ha sido enviado exitosamente.</p>
+    <p>Su pago ha sido enviado exitosamente. Con fé todo se logra</p>
     <button class="closePopup">Cerrar</button>
   </div>
 </div>
